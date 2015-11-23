@@ -186,9 +186,11 @@ var game =
 				canvas.context = canvas.getContext ('2d');
 				canvas.draw = game.draw;
 				canvas.draw.context = canvas.context;
+				canvas.height = window.innerHeight;
 				canvas.id = (object.id) ? object.id : 'background';
 				canvas.style.position = 'absolute';
 				canvas.style.zIndex = (object.layer) ? object.layer : 0;
+				canvas.width = window.innerWidth;
 			game.canvas[canvas.id] = canvas;
 			window.document.body.appendChild (canvas);
 		}
@@ -313,6 +315,22 @@ var game =
 		};
 	},
 
+	logic: function ()
+	{
+		if (game.mode.type != '')
+		{
+			game.mode[game.mode.type]();
+			game.mode.type = (game.mode.change) ? (game.mode.change) : '';
+			game.mode.change = '';	
+		};
+	},
+
+	mode:
+	{
+		change: '',
+		type: ''
+	},
+	
 	option:
 	{
 		interval: 1000
@@ -320,6 +338,7 @@ var game =
 
 	paint: function ()
 	{
+		game.canvas.resize ();
 		for (var id in game.canvas)
 		{
 			switch (id)
@@ -448,7 +467,7 @@ var game =
 
 	update: function ()
 	{
-		game.canvas.resize ();
+		game.logic ();
 		game.interface ();
 		game.paint ();
 	}
